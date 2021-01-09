@@ -1,0 +1,130 @@
+/*
+ * Copyright (c) 2006-2018, RT-Thread Development Team
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2006-08-31     Bernard      first implementation
+ */
+
+#include <rthw.h>
+#include <rtthread.h>
+
+#include "board.h"
+
+/**
+ * @addtogroup STM32
+ */
+
+/*@{*/
+#include <dts/embedded/hal/gpio.h>
+extern gpio_t led;
+extern void led_blink(gpio_t *led, int second);
+void rt_init_thread_entry(void* parameter)
+{
+	gpio_init(&led);
+	
+	led_blink(&led, 1);
+}
+
+int rt_application_init(void)
+{
+    rt_thread_t init_thread;
+
+    init_thread = rt_thread_create("init",
+                                   rt_init_thread_entry, RT_NULL,
+                                   2048, 8, 20);
+
+    if (init_thread != RT_NULL)
+        rt_thread_startup(init_thread);
+
+    return 0;
+}
+
+#if defined(__CC_ARM) || defined(__CLANG_ARM)
+extern int Image$$RW_IRAM1$$ZI$$Limit;
+#elif __ICCARM__
+#pragma section="HEAP"
+#else
+extern int __bss_end;
+#endif
+
+/*******************************************************************************
+* Function Name  : assert_failed
+* Description    : Reports the name of the source file and the source line number
+*                  where the assert error has occurred.
+* Input          : - file: pointer to the source file name
+*                  - line: assert error line source number
+* Output         : None
+* Return         : None
+*******************************************************************************/
+void assert_failed(u8* file, u32 line)
+{
+    rt_kprintf("\n\r Wrong parameter value detected on\r\n");
+    rt_kprintf("       file  %s\r\n", file);
+    rt_kprintf("       line  %d\r\n", line);
+
+    while (1) ;
+}
+
+/**
+ * This function will startup RT-Thread RTOS.
+ */
+void rtthread_startup(void)
+{
+    /* init board */
+    rt_hw_board_init();
+
+    /* show version */
+    rt_show_version();
+
+#ifdef RT_USING_HEAP
+#if STM32_EXT_SRAM
+    rt_system_heap_init((void*)STM32_EXT_SRAM_BEGIN, (void*)STM32_EXT_SRAM_END);
+#else
+#if defined(__CC_ARM) || defined(__CLANG_ARM)
+    rt_system_heap_init((void*)&Image$$RW_IRAM1$$ZI$$Limit, (void*)STM32_SRAM_END);
+#elif __ICCARM__
+    rt_system_heap_init(__segment_end("HEAP"), (void*)STM32_SRAM_END);
+#else
+    /* init memory system */
+    rt_system_heap_init((void*)&__bss_end, (void*)STM32_SRAM_END);
+#endif
+#endif  /* STM32_EXT_SRAM */
+#endif /* RT_USING_HEAP */
+
+    /* init scheduler system */
+    rt_system_scheduler_init();
+
+    /* initialize timer */
+    rt_system_timer_init();
+
+    /* init timer thread */
+    rt_system_timer_thread_init();
+
+    /* init application */
+    rt_application_init();
+
+    /* init idle thread */
+    rt_thread_idle_init();
+
+    /* start scheduler */
+    rt_system_scheduler_start();
+
+    /* never reach here */
+    return ;
+}
+
+int main(void)
+{
+    /* disable interrupt first */
+    rt_hw_interrupt_disable();
+
+    /* startup RT-Thread RTOS */
+    rtthread_startup();
+
+    return 0;
+}
+
+/*@}*/
