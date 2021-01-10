@@ -22,6 +22,13 @@ Lots of embedded project named by [chip]-[toolchain]-[os]-[title].
 
 ### else
 
+- 1
 gpio->led->uart->com model->i2c->at24cxx test->spi->wq25 test->
 
+- 2
 init 和 clk_on power_on 的区分
+
+- 3
+hal 给 elib tick
+elib_tick <- elib_delay
+elib_tick <- elib_timer
