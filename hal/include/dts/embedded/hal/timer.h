@@ -47,4 +47,9 @@
 # define timer_set_frequency dts_hal_timer_set_frequency
 #endif // DTS_HAL_TIMER_SET_FREQUENCY_SUPPORT
 
+#if DTS_HAL_TIMER_TICK_SUPPORT == 1
+#define timer_tick dts_hal_timer_tick
+#define timer_set_tick_freq dts_hal_timer_set_tick_freq
+#endif // DTS_HAL_TIMER_TICK_SUPPORT
+
 #endif // TIMER_H_

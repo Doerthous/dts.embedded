@@ -33,13 +33,17 @@
 
 int dts_hal_timer_config(dts_hal_timer_t *timer, int cmd, ...);
 void dts_hal_timer_start(dts_hal_timer_t *timer);
-size_t dts_hal_timer_tick(dts_hal_timer_t *timer);
 void dts_hal_timer_stop(dts_hal_timer_t *timer);
 
 #if DTS_HAL_TIMER_RESTART_SUPPORT == 1
 void dts_hal_timer_restart(dts_hal_timer_t *timer);
 #endif // DTS_HAL_TIMER_RESTART_SUPPORT
 
+/**
+ * @brief Callback Feature
+ *          User can use there interfaces to set up an hw-timer interrupt.
+ *          This feature is mutually exclusive from **Tick** feature.
+ */
 #if DTS_HAL_TIMER_SET_CALLBACK_SUPPORT == 1
 int dts_hal_timer_set_callback(dts_hal_timer_t *timer, 
     void (*callback)(dts_hal_timer_t *, void *), void *data);
@@ -48,5 +52,16 @@ int dts_hal_timer_set_callback(dts_hal_timer_t *timer,
 #if DTS_HAL_TIMER_SET_FREQUENCY_SUPPORT == 1
 int dts_hal_timer_set_frequency(dts_hal_timer_t *timer, int freq);
 #endif // DTS_HAL_TIMER_SET_FREQUENCY_SUPPORT
+
+/**
+ * @brief Tick Feature
+ *          User can use there interfaces to configure the frequency of counting
+ *          of the given hw-timer. And access the **counting value**.
+ *          This feature is mutually exclusive from **Callback** feature.
+ */
+#if DTS_HAL_TIMER_TICK_SUPPORT == 1
+size_t dts_hal_timer_tick(dts_hal_timer_t *timer);
+int dts_hal_timer_set_tick_freq(dts_hal_timer_t *timer, int freq);
+#endif // DTS_HAL_TIMER_TICK_SUPPORT
 
 #endif // DTS_HAL_TIMER_H_

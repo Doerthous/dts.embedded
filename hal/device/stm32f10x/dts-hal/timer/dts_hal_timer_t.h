@@ -35,10 +35,13 @@ typedef struct
     TIM_TypeDef *tim;
     void (*callback)(void *timer, void *data);
     void *data;
+
+    size_t tick;
 } dts_hal_timer_t;
 
 #define DTS_HAL_TIMER_RESTART_SUPPORT 1
 #define DTS_HAL_TIMER_SET_CALLBACK_SUPPORT 1
 #define DTS_HAL_TIMER_SET_FREQUENCY_SUPPORT 1
+#define DTS_HAL_TIMER_TICK_SUPPORT 1
 
 #endif // DTS_HAL_TIMER_T_H_

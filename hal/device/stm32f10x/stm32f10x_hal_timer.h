@@ -37,6 +37,8 @@ typedef struct
     TIM_TypeDef *tim;
     void (*callback)(void *, void *);
     void *data;
+
+    size_t tick;
 } stm32f10x_hal_timer_t;
 
 int stm32f10x_hal_timer_config(stm32f10x_hal_timer_t *timer, int cmd, ...);

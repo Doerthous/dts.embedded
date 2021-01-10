@@ -29,8 +29,12 @@
 # define timer_t stm32f10x_hal_timer_t
 # define timer_config stm32f10x_hal_timer_config
 # define timer_start stm32f10x_hal_timer_start
-# define timer_tick stm32f10x_hal_timer_tick
+# define timer_restart stm32f10x_hal_timer_restart
 # define timer_stop stm32f10x_hal_timer_stop
+# define timer_tick stm32f10x_hal_timer_tick
+# define timer_set_tick_freq stm32f10x_hal_timer_set_tick_freq
+# define timer_set_frequency stm32f10x_hal_timer_set_frequency
+# define timer_set_callback stm32f10x_hal_timer_set_callback
 #else
 # include <dts/embedded/hal/timer.h>
 #endif // DTS_STM32F10X_HAL_TIMER
@@ -40,14 +44,30 @@
 #define ASSERT(expr) do {;} while(!(expr))
 
 
-#define timer_cb_t void (*)(void *, void *)
-
-static void tim_isr(void *t)
+static void enable_intr(timer_t *t, void (*hdlr)(void *))
 {
-    timer_t *timer = (timer_t *)t;
+    irq_t irq;
 
-    timer->callback(timer, timer->data);
-    TIM_ClearITPendingBit(timer->tim, TIM_IT_Update);
+
+    while (1) {
+        if (t->tim == TIM1) {
+            irq = TIM1_UP_IRQn;
+            break;
+        }
+        if (t->tim == TIM2) {
+            irq = TIM2_IRQn;
+            break;
+        }
+        if (t->tim == TIM3) {
+            irq = TIM3_IRQn;
+            break;
+        }
+        return;
+    }
+
+    interrupt_set_handler(irq, hdlr);
+	interrupt_set_handler_data(irq, (void *)t);
+    interrupt_enable(irq);
 }
 
 static int rcc_clock_config(timer_t *t, FunctionalState state)
@@ -68,10 +88,19 @@ static int rcc_clock_config(timer_t *t, FunctionalState state)
     return -1;
 }
 
-
 static inline int get_source_clk(timer_t *t)
 {
     return 72000000;
+}
+
+#define timer_cb_t void (*)(void *, void *)
+
+static void isr_for_callback(void *t)
+{
+    timer_t *timer = (timer_t *)t;
+
+    timer->callback(timer, timer->data);
+    TIM_ClearITPendingBit(timer->tim, TIM_IT_Update);
 }
 
 #include <math.h>
@@ -109,32 +138,6 @@ int timer_set_frequency(timer_t *t, int freq)
     return 1;
 }
 
-static void enable_intr(timer_t *t)
-{
-    irq_t irq;
-
-
-    while (1) {
-        if (t->tim == TIM1) {
-            irq = TIM1_UP_IRQn;
-            break;
-        }
-        if (t->tim == TIM2) {
-            irq = TIM2_IRQn;
-            break;
-        }
-        if (t->tim == TIM3) {
-            irq = TIM3_IRQn;
-            break;
-        }
-        return;
-    }
-
-    interrupt_set_handler(irq, tim_isr);
-	interrupt_set_handler_data(irq, (void *)t);
-    interrupt_enable(irq);
-}
-
 int timer_set_callback(timer_t *t, void (*callback)(timer_t *, void *), void *d)
 {
     t->callback = callback == NULL ? 
@@ -144,7 +147,7 @@ int timer_set_callback(timer_t *t, void (*callback)(timer_t *, void *), void *d)
     if (callback != NULL) {
         TIM_ClearFlag(t->tim, TIM_FLAG_Update);
         TIM_ITConfig(t->tim, TIM_IT_Update, ENABLE);
-        enable_intr(t);
+        enable_intr(t, isr_for_callback);
     }
     else {
         TIM_ITConfig(t->tim, TIM_IT_Update, DISABLE);
@@ -196,16 +199,54 @@ void timer_start(timer_t *timer)
     timer->tim->CR1 |= (1 << 2);
     timer->tim->CR1 |= (1 << 0);
 }
-size_t timer_tick(timer_t *timer)
-{
-	return 0;
-}
+
 void timer_stop(timer_t *timer)
 {
     timer->tim->CR1 &= ~(1 << 0);
 }
+
 void timer_restart(timer_t *timer)
 {
-    (timer)->tim->CNT = 0;
+    timer->tim->CNT = 0;
     dts_hal_timer_start(timer);
+}
+
+/**
+ * @brief Tick Feature
+ *          User can use there interfaces to configure the frequency of counting
+ *          of the given hw-timer. And access the **counting value**.
+ *          This feature is mutually exclusive from **Callback** feature.
+ */
+size_t timer_tick(timer_t *timer)
+{
+	return timer->tick | timer->tim->CNT;
+}
+static void isr_for_tick(void *t)
+{
+    timer_t *timer = (timer_t *)t;
+    timer->tick += 0x10000;
+    TIM_ClearITPendingBit(timer->tim, TIM_IT_Update);
+}
+int timer_set_tick_freq(timer_t *timer, int freq)
+{
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+    int src_clk = get_source_clk(timer);
+
+    TIM_DeInit(timer->tim);
+    timer->tick = 0;
+    
+    TIM_TimeBaseStructure.TIM_Period = 0xFFFF;
+    TIM_TimeBaseStructure.TIM_Prescaler = src_clk/freq-1;
+    TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    
+    TIM_TimeBaseInit(timer->tim, &TIM_TimeBaseStructure);
+    
+    TIM_ClearFlag(timer->tim, TIM_FLAG_Update);
+    TIM_ITConfig(timer->tim, TIM_IT_Update, ENABLE);
+    enable_intr(timer, isr_for_tick);
+	
+    TIM_Cmd(timer->tim, ENABLE);
+	
+	return 1;
 }
