@@ -1,3 +1,6 @@
 [submodule "os/rt-thread"]
 	path = os/rt-thread
 	url = https://github.com/RT-Thread/rt-thread.git
+[submodule "fs/fatfs"]
+	path = fs/fatfs
+	url = https://github.com/Doerthous/fatfs.git
