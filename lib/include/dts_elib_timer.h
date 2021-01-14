@@ -41,5 +41,6 @@ dts_elib_timer_init(dts_elib_timer_t *timer, size_t (*tick)(void));
 void dts_elib_timer_start(dts_elib_timer_t *timer, size_t interval);
 void dts_elib_timer_restart(dts_elib_timer_t *timer);
 int dts_elib_timer_expired(dts_elib_timer_t *timer);
+size_t dts_elib_timer_remain(dts_elib_timer_t *timer);
 
 #endif // DTS_ELIB_TIMER_H_

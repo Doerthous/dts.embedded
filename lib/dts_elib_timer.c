@@ -49,3 +49,8 @@ int dts_elib_timer_expired(dts_elib_timer_t *timer)
 {
     return ((timer->tick() - timer->start) > timer->interval);
 }
+
+size_t dts_elib_timer_remain(dts_elib_timer_t *timer)
+{
+    return (timer->interval - (timer->tick() - timer->start));
+}
