@@ -32,3 +32,11 @@ init 和 clk_on power_on 的区分
 hal 给 elib tick
 elib_tick <- elib_delay
 elib_tick <- elib_timer
+
+### todo
+
+- bootp and dhcp
+
+- tcp
+
+- ip ether_arp optimize
