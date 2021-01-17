@@ -595,7 +595,8 @@ size_t enc28j60_send(enc28j60_t *enc28j60, uint8_t *data, size_t size)
     #define TX_LEN_OUT_OF_RANGE (buff[2]&0x40)
     #define TX_DONE (buff[2]&0x80)
 
-    if (TX_CRC_ERROR|TX_LEN_ERROR|TX_LEN_OUT_OF_RANGE) {
+    // TX_LEN_OUT_OF_RANGE: type/length larger than 1500.
+    if (TX_CRC_ERROR|TX_LEN_ERROR/*|TX_LEN_OUT_OF_RANGE*/) {
         return 0;
     }
 
