@@ -32,6 +32,7 @@
 #define timer_t dts_elib_timer_t
 #define timer_init dts_elib_timer_init
 #define timer_start dts_elib_timer_start
+#define timer_stop dts_elib_timer_stop
 #define timer_restart dts_elib_timer_restart
 #define timer_expired dts_elib_timer_expired
 #define timer_remain dts_elib_timer_remain

@@ -40,6 +40,11 @@ void dts_elib_timer_start(dts_elib_timer_t *timer, size_t intv)
     timer->start = timer->tick();
 }
 
+void dts_elib_timer_stop(dts_elib_timer_t *timer)
+{
+    timer->interval = 0;
+}
+
 void dts_elib_timer_restart(dts_elib_timer_t *timer)
 {
     timer->start = timer->tick();
@@ -47,10 +52,12 @@ void dts_elib_timer_restart(dts_elib_timer_t *timer)
 
 int dts_elib_timer_expired(dts_elib_timer_t *timer)
 {
-    return ((timer->tick() - timer->start) > timer->interval);
+    return timer->interval > 0 ?
+        ((timer->tick() - timer->start) > timer->interval) : 0;
 }
 
 size_t dts_elib_timer_remain(dts_elib_timer_t *timer)
 {
-    return (timer->interval - (timer->tick() - timer->start));
+    return timer->interval > 0 ?
+        (timer->interval - (timer->tick() - timer->start)) : 0;
 }
