@@ -7,3 +7,6 @@
 [submodule "net/dts.net"]
 	path = net/dts.net
 	url = https://github.com/Doerthous/dts.net.git
+[submodule "os/dts.coroutine"]
+	path = os/dts.coroutine
+	url = https://github.com/Doerthous/dts.coroutine.git
