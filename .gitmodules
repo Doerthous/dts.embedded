@@ -10,3 +10,6 @@
 [submodule "os/dts.coroutine"]
 	path = os/dts.coroutine
 	url = https://github.com/Doerthous/dts.coroutine.git
+[submodule "os/FreeRTOS"]
+	path = os/FreeRTOS
+	url = https://github.com/FreeRTOS/FreeRTOS.git
