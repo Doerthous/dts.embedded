@@ -13,3 +13,7 @@
 [submodule "os/FreeRTOS"]
 	path = os/FreeRTOS
 	url = https://github.com/FreeRTOS/FreeRTOS.git
+[submodule "net/lwip"]
+    path = net/lwip
+    url = https://github.com/lwip-tcpip/lwip.git
+
