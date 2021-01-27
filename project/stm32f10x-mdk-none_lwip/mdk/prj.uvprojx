@@ -667,6 +667,11 @@
               <FileType>1</FileType>
               <FilePath>..\net\lwip\ethernetif.c</FilePath>
             </File>
+            <File>
+              <FileName>mem.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\net\lwip\src\core\mem.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
