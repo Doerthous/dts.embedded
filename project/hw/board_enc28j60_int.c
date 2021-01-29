@@ -8,10 +8,15 @@ extern enc28j60_t enc28j60;
 extern gpio_t enc28j60_int;
 extern void enc28j60_recv_isr(enc28j60_t *e);
 
+#ifndef EVENT_ENC28J60_INT
+# define EVENT_SET_ENC28J60_INT pg6_intr = 1;
+# define EVENT_CHECK_ENC28J60_INT pg6_intr
+# define EVENT_RESET_ENC28J60_INT pg6_intr = 0;
 static int pg6_intr;
+#endif // EVENT_ENC28J60_INT
 void pg6_intr_handler(void *data)
 {
-	pg6_intr = 1;
+	EVENT_SET_ENC28J60_INT;
 }
 
 #define handle(enc28j60, eir) do \
@@ -29,8 +34,8 @@ void pg6_intr_handler(void *data)
 
 void enc28j60_int_poll(void) 
 {
-	if (pg6_intr) {
-		pg6_intr = 0;
+	if (EVENT_CHECK_ENC28J60_INT) {
+		EVENT_RESET_ENC28J60_INT;
 		enc28j60_isr(&enc28j60, handle);
 	}
 }
