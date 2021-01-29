@@ -24,30 +24,10 @@
    Authour: Doerthous <doerthous@gmail.com>
 */
 
-#ifndef DTS_HAL_CONF_DEMO_H_
-#define DTS_HAL_CONF_DEMO_H_
+#ifndef DTS_EOS_CONF_H_
+#define DTS_EOS_CONF_H_
 
-//#define DTS_HAL_UART_PRINTF_BUFFER_SIZE 256
-//#define DTS_HAL_ASSERT_OUTPUT uart1
-//#define DTS_HAL_ASSERT_ENABLE
-//#define DTS_HAL_GPIO_INTERRUPT_ENABLE
+#define DTS_EOS_THREAD_DEFAULT_PRIORITY 8
+#define DTS_EOS_THREAD_DEFAULT_TICK     20
 
-//#define DTS_HAL_LOCK_ENABLE
-#ifdef DTS_HAL_LOCK_ENABLE
-# define DTS_HAL_LOCK void *hal_lock;
-void dts_hal_lock_new(void *hal_obj);
-void dts_hal_lock_delete(void *hal_obj);
-void dts_hal_lock_lock(void *hal_obj);
-void dts_hal_lock_unlock(void *hal_obj);
-#else
-# define DTS_HAL_LOCK
-# define dts_hal_lock_new(hal_obj)
-# define dts_hal_lock_delete(hal_obj)
-# define dts_hal_lock_lock(hal_obj)
-# define dts_hal_lock_unlock(hal_obj)
-#endif // DTS_HAL_LOCK_ENABLE
-
-//#define DTS_HAL_UART_LOCK_ENABLE
-//#define DTS_HAL_UART_DEFAULT_BAUD_RATE 9600
-
-#endif // DTS_HAL_CONF_DEMO_H_
+#endif // DTS_EOS_CONF_H_

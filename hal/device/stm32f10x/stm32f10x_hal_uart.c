@@ -37,7 +37,20 @@
 
 #include <dts/embedded/hal/interrupt.h>
 
+#ifndef DTS_HAL_UART_DEFAULT_BAUD_RATE
 #define DTS_HAL_UART_DEFAULT_BAUD_RATE 9600
+#endif // DTS_HAL_UART_DEFAULT_BAUD_RATE
+
+#ifndef DTS_HAL_UART_LOCK_ENABLE
+# undef dts_hal_lock_new
+# undef dts_hal_lock_delete
+# undef dts_hal_lock_lock
+# undef dts_hal_lock_unlock
+# define dts_hal_lock_new(hal_obj)
+# define dts_hal_lock_delete(hal_obj)
+# define dts_hal_lock_lock(hal_obj)
+# define dts_hal_lock_unlock(hal_obj)
+#endif // DTS_HAL_UART_LOCK_ENABLE
 
 #define to_st_uart(uart) ((uart_t *)(uart))->st_uart
 
@@ -60,12 +73,24 @@ static int uart_received(void *uart)
 
 size_t uart_write(uart_t *uart, uint8_t *data, size_t size)
 {
-    return uart->write(uart, data, size);
+    dts_hal_lock_lock(uart);
+
+    size = uart->write(uart, data, size);
+
+    dts_hal_lock_unlock(uart);
+
+    return size;
 }
 
 size_t uart_read(uart_t *uart, uint8_t *buff, size_t size)
 {
-    return uart->read(uart, buff, size);
+    dts_hal_lock_lock(uart);
+
+    size = uart->read(uart, buff, size);
+
+    dts_hal_lock_unlock(uart);
+
+    return size;
 }
 
 /**
@@ -98,6 +123,7 @@ void uart_init(uart_t *uart)
     uart->_.recv = uart_recv;
     uart->_.sent = uart_sent;
     uart->_.received = uart_received;
+    dts_hal_lock_new(uart);
     
     #if defined(USE_STDPERIPH_DRIVER)
     GPIO_InitTypeDef GPIO_InitStructure;

@@ -27,7 +27,7 @@
 #ifndef UART_H_
 #define UART_H_
 
-#include "../../../dts_hal_uart.h"
+#include <dts_hal_uart.h>
 
 #define uart_t dts_hal_uart_t
 #define uart_init dts_hal_uart_init

@@ -40,6 +40,8 @@ typedef struct
     USART_TypeDef * st_uart;
     size_t (*write)(void *uart, uint8_t *data, size_t size);
     size_t (*read)(void *uart, uint8_t *buff, size_t size);
+
+    DTS_HAL_LOCK;
 } dts_hal_uart_t;
 
 #endif // DTS_HAL_UART_T_H_
