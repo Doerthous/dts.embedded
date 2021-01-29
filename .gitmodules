@@ -17,3 +17,6 @@
     path = net/lwip
     url = https://github.com/lwip-tcpip/lwip.git
 
+[submodule "os/dts.eos"]
+	path = os/dts.eos
+	url = https://github.com/Doerthous/dts.eos.git
