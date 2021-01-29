@@ -547,6 +547,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\app\isr_thrd.c</FilePath>
             </File>
+            <File>
+              <FileName>init_thrd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\app\init_thrd.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
