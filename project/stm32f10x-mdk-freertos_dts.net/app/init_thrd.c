@@ -73,8 +73,3 @@ void init_thread_entry(void* parameter)
 		dts_net_sys_heartbeat();
 	}
 }
-
-void init_thrd_init(void)
-{
-	thrd_new(&init_thread, init_thread_entry, NULL, 1024);
-}
