@@ -34,4 +34,13 @@ extern size_t dts_hal_uart_printf(dts_hal_uart_t *uart, const char *fmt, ...);
 
 #define uart_printf dts_hal_uart_printf
 
+#ifdef DTS_HAL_UART_PRINTF_NO_PREFIX
+# ifndef DTS_HAL_UART_PRINTF_OUTPUT
+#  error No output uart found
+# else
+   extern dts_hal_uart_t DTS_HAL_UART_PRINTF_OUTPUT;
+#  define printf(...) uart_printf(&DTS_HAL_UART_PRINTF_OUTPUT, __VA_ARGS__)
+# endif
+#endif
+
 #endif // UART_PRINTF_H_

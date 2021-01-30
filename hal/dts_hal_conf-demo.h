@@ -27,7 +27,6 @@
 #ifndef DTS_HAL_CONF_DEMO_H_
 #define DTS_HAL_CONF_DEMO_H_
 
-//#define DTS_HAL_UART_PRINTF_BUFFER_SIZE 256
 //#define DTS_HAL_ASSERT_OUTPUT uart1
 //#define DTS_HAL_ASSERT_ENABLE
 //#define DTS_HAL_GPIO_INTERRUPT_ENABLE
@@ -49,5 +48,8 @@ void dts_hal_lock_unlock(void *hal_obj);
 
 //#define DTS_HAL_UART_LOCK_ENABLE
 //#define DTS_HAL_UART_DEFAULT_BAUD_RATE 9600
+//#define DTS_HAL_UART_PRINTF_BUFFER_SIZE 256
+//#define DTS_HAL_UART_PRINTF_OUTPUT uart1
+//#define DTS_HAL_UART_PRINTF_NO_PREFIX
 
 #endif // DTS_HAL_CONF_DEMO_H_
