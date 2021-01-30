@@ -1,0 +1,11 @@
+#ifndef DTS_HAL_CONF_H_
+#define DTS_HAL_CONF_H_
+
+#define DTS_HAL_ASSERT_OUTPUT uart1
+#define DTS_HAL_ASSERT_ENABLE
+
+#define DTS_HAL_LOCK
+#define DTS_HAL_UART_PRINTF_OUTPUT uart1
+#define DTS_HAL_UART_PRINTF_NO_PREFIX
+
+#endif // DTS_HAL_CONF_H_
