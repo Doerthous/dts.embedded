@@ -35,8 +35,6 @@ elib_tick <- elib_timer
 
 ### todo
 
-- bootp and dhcp
+- 提取elib
 
-- tcp
-
-- ip ether_arp optimize
+- datastruct改名为dsna（Datastruct And Algorithm）
