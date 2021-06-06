@@ -482,6 +482,21 @@
               <FileType>1</FileType>
               <FilePath>..\dts.usb\dts_usb_control_transfer.c</FilePath>
             </File>
+            <File>
+              <FileName>dts_usb_std_dev_req.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\dts.usb\dts_usb_std_dev_req.c</FilePath>
+            </File>
+            <File>
+              <FileName>dts_usb_bulk_transfer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\dts.usb\dts_usb_bulk_transfer.c</FilePath>
+            </File>
+            <File>
+              <FileName>dts_usb_com_dev_line_coding.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\dts.usb\dts_usb_com_dev_line_coding.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

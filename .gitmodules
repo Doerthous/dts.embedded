@@ -23,3 +23,6 @@
 [submodule "project/stm32f10x-mdk-none-usb/dts.usb"]
 	path = project/stm32f10x-mdk-none-usb/dts.usb
 	url = https://github.com/Doerthous/dts.usb.git
+[submodule "lib/dts.usb"]
+	path = lib/dts.usb
+	url = https://github.com/Doerthous/dts.usb.git
